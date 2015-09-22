@@ -1,0 +1,164 @@
+$(function()
+{
+	$('.top').css('width',100/$('.top').length+'%');
+	b_count=0; g_count=0;
+	$('.boy').each(function()
+	{
+		$(this).css('top',40+b_count*40);
+		++b_count;
+	});
+	$('.girl').each(function()
+	{
+		$(this).css('top',40+g_count*40);
+		++g_count;
+	});
+});
+//--------------------------------------课程信息--------------------------------------------
+function Course(var_name,name,email,tel,office,work_time,a1_name,a1_email,a1_tel,a2_name,a2_email,a2_tel)
+{
+	this.var_name=var_name;
+	this.name=name;
+	this.email=email;
+	this.tel=tel;
+	this.office=office;
+	this.work_time=work_time;
+
+	this.a1_name=a1_name;	//assistant 1
+	this.a1_email=a1_email;
+	this.a1_tel=a1_tel;
+
+	this.a2_name=a2_name;	//assistant 2
+	this.a2_email=a2_email;
+	this.a2_tel=a2_tel;
+}
+function score(usual,mid,end,other)
+{
+	this.usual=usual;
+	this.mid=mid;
+	this.end=end;
+	this.other=other;
+}
+function book(book1,book2,book3)
+{
+	this.book1=book1;
+	this.book2=book2;
+	this.book3=book3;
+}
+
+function other(other)
+{
+	this.other=other;
+}
+
+//------------------------------读取信息 Course in--------------------------------------------------
+var bdt=new Course('bdt', '邹卫文', 'wzou@sjtu.edu.cn', '021-52305207', '电群5-203', '', '', '', '', '', '', '');
+bdt.score=new score('', '', '', '');
+bdt.book=new book('', '', '');
+bdt.linking='';
+bdt.homework='';
+bdt.other='';
+//------------------------------读取信息 Course out--------------------------------------------------
+
+//-------------------------------------显示课程信息--------------------------------
+function show(c)
+{
+	$('#arrange').html('');
+	$('#teacher').html('<table>\
+		<tr><th>教师</th><td>'+c.name+'</td></tr>\
+		<tr><th>邮箱</th><td>'+c.email+'</td></tr>\
+		<tr><th>电话</th><td>'+c.tel+'</td></tr>\
+		<tr><th>办公室</th><td>'+c.office+'</td></tr>\
+		<tr><th>办公时间</th><td>'+c.work_time+'</td></tr>\
+		</table>');
+	if(c.a1_name)
+		$('#teacher').append('<table>\
+			<tr><th>助教</th><td>'+c.a1_name+'</td></tr>\
+			<tr><th>邮箱</th><td>'+c.a1_email+'</td></tr>\
+			<tr><th>电话</th><td>'+c.a1_tel+'</td></tr>\
+			</table>');
+	if(c.a2_name)
+		$('#teacher').append('<table>\
+			<tr><th>助教</th><td>'+c.a2_name+'</td></tr>\
+			<tr><th>邮箱</th><td>'+c.a2_email+'</td></tr>\
+			<tr><th>电话</th><td>'+c.a2_tel+'</td></tr>\
+			</table>');
+	$('#linking').attr('href',c.linking);
+	$('#score').attr('onclick','show_score('+c.var_name+')');
+	$('#book').attr('onclick','show_book('+c.var_name+')');
+	$('#homework').attr('onclick','show_homework('+c.var_name+')');
+	$('#other').attr('onclick','show_other('+c.var_name+')');
+	$('#schedule_boy').css('opacity',0);
+	$('#schedule_girl').css('opacity',0);
+}
+function show_book(c)
+{
+	show(c);
+	$('#arrange').html('<table>\
+		<tr><td>'+c.book.book1+'</td></tr>\
+		</table>')
+	if(c.book.book2)
+		$('#arrange').append('<table>\
+		<tr><td>'+c.book.book2+'</td></tr>\
+		</table>')
+	if(c.book.book3)
+		$('#arrange').append('<table>\
+		<tr><td>'+c.book.book3+'</td></tr>\
+		</table>')
+}
+function show_score(c)
+{
+	show(c);
+	$('#arrange').html('<table>\
+		<tr><th>平时</th><td>'+c.score.usual+'</td></tr>\
+		<tr><th>期中</th><td>'+c.score.mid+'</td></tr>\
+		<tr><th>期末</th><td>'+c.score.end+'</td></tr>\
+		<tr><th>其他</th><td>'+c.score.other+'</td></tr>\
+		</table>')
+}
+
+function show_homework(c)
+{
+	$('#arrange').html('');
+	$('#teacher').html(c.homework);
+	$('#schedule_boy').css('opacity',0);
+	$('#schedule_girl').css('opacity',0);
+}
+
+function show_other(c)
+{
+	show(c);
+	$('#arrange').html(c.other);
+}
+
+var who=0;
+function show_schedule()
+{
+	$('#teacher').html('');
+	$('#arrange').html('');
+	if(who!=0)
+	{
+		$('#schedule_girl').css('opacity',0);
+		$('#schedule_boy').css('opacity',0.4);
+		who=0;
+	}
+	else
+	{
+		$('#schedule_girl').css('opacity',0.4);
+		$('#schedule_boy').css('opacity',0);
+		who=1;
+	}
+	$('#course button').each(function()
+	{
+		$(this).css('background-image','url(img/button.png)');
+	})
+}
+
+//将选中课程按钮颜色改为红色
+$('#course button').mouseup(function()
+{
+	$('#course button').each(function()
+	{
+		$(this).css('background-image','url(img/button.png)');
+	})
+	$(this).css('background-image','url(img/button_red.png)');
+})
